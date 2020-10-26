@@ -59,7 +59,7 @@ F 3 "" H 1150 1450 60  0001 C CNN
 $EndComp
 Text Notes 650  750  0    60   ~ 0
 max 46V/4.5A
-Text GLabel 5950 5800 0    60   Input ~ 0
+Text GLabel 5350 5800 0    60   Input ~ 0
 TMC-DIR
 Text GLabel 5350 5700 0    60   Input ~ 0
 TMC-STEP
@@ -796,8 +796,6 @@ Wire Wire Line
 Wire Wire Line
 	6800 5700 5950 5700
 Wire Wire Line
-	5950 5800 6800 5800
-Wire Wire Line
 	9350 3500 9350 2950
 Connection ~ 9350 3500
 Wire Wire Line
@@ -1080,4 +1078,96 @@ Wire Wire Line
 	4750 1350 4750 1700
 NoConn ~ 6800 4100
 NoConn ~ 6800 4200
+Wire Wire Line
+	5350 5800 6800 5800
+Text GLabel 3600 3750 2    39   Input ~ 0
+TMC-VREF
+Text GLabel 1350 3750 0    39   Input ~ 0
+VREF
+$Comp
+L tinkerforge:R R?
+U 1 1 5FA7C905
+P 1700 3750
+F 0 "R?" V 1780 3750 50  0000 C CNN
+F 1 "TBD" V 1700 3750 50  0000 C CNN
+F 2 "kicad-libraries:R0603F" H 1700 3750 60  0001 C CNN
+F 3 "" H 1700 3750 60  0001 C CNN
+	1    1700 3750
+	0    1    1    0   
+$EndComp
+$Comp
+L tinkerforge:R R?
+U 1 1 5FA7D678
+P 2800 3750
+F 0 "R?" V 2880 3750 50  0000 C CNN
+F 1 "TBD" V 2800 3750 50  0000 C CNN
+F 2 "kicad-libraries:R0603F" H 2800 3750 60  0001 C CNN
+F 3 "" H 2800 3750 60  0001 C CNN
+	1    2800 3750
+	0    1    1    0   
+$EndComp
+$Comp
+L tinkerforge:C C?
+U 1 1 5FA7EECB
+P 2250 4050
+F 0 "C?" V 2100 4000 50  0000 L CNN
+F 1 "TBD" V 2400 3950 50  0000 L CNN
+F 2 "kicad-libraries:C0603F" H 2250 4050 60  0001 C CNN
+F 3 "" H 2250 4050 60  0000 C CNN
+	1    2250 4050
+	-1   0    0    1   
+$EndComp
+$Comp
+L tinkerforge:C C?
+U 1 1 5FA80373
+P 3300 4050
+F 0 "C?" V 3150 4000 50  0000 L CNN
+F 1 "TBD" V 3450 3950 50  0000 L CNN
+F 2 "kicad-libraries:C0603F" H 3300 4050 60  0001 C CNN
+F 3 "" H 3300 4050 60  0000 C CNN
+	1    3300 4050
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1950 3750 2250 3750
+Wire Wire Line
+	2250 3750 2250 3850
+Wire Wire Line
+	2250 3750 2550 3750
+Connection ~ 2250 3750
+Wire Wire Line
+	3050 3750 3300 3750
+Wire Wire Line
+	3300 3750 3300 3850
+Wire Wire Line
+	3300 3750 3600 3750
+Connection ~ 3300 3750
+Wire Wire Line
+	1450 3750 1350 3750
+$Comp
+L tinkerforge:AGND #PWR?
+U 1 1 5FAA6395
+P 2250 4350
+F 0 "#PWR?" H 2250 4350 40  0001 C CNN
+F 1 "AGND" H 2250 4280 50  0000 C CNN
+F 2 "" H 2250 4350 60  0001 C CNN
+F 3 "" H 2250 4350 60  0001 C CNN
+	1    2250 4350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2250 4250 2250 4350
+$Comp
+L tinkerforge:AGND #PWR?
+U 1 1 5FAAEDE5
+P 3300 4350
+F 0 "#PWR?" H 3300 4350 40  0001 C CNN
+F 1 "AGND" H 3300 4280 50  0000 C CNN
+F 2 "" H 3300 4350 60  0001 C CNN
+F 3 "" H 3300 4350 60  0001 C CNN
+	1    3300 4350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 4250 3300 4350
 $EndSCHEMATC

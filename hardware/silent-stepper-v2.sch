@@ -265,13 +265,13 @@ Text GLabel 2250 1800 2    60   Output ~ 0
 S-MOSI
 Text GLabel 2250 1900 2    60   Input ~ 0
 S-MISO
-Text GLabel 3450 1000 0    47   Input ~ 0
+Text GLabel 3450 1000 0    39   Input ~ 0
 S-CS
-Text GLabel 3450 1200 0    47   Input ~ 0
+Text GLabel 3450 1200 0    39   Input ~ 0
 S-CLK
-Text GLabel 3450 1100 0    47   Input ~ 0
+Text GLabel 3450 1100 0    39   Input ~ 0
 S-MOSI
-Text GLabel 3450 1500 0    47   Output ~ 0
+Text GLabel 3450 1500 0    39   Output ~ 0
 S-MISO
 $Comp
 L tinkerforge:LED D3
@@ -568,10 +568,6 @@ Wire Wire Line
 	3200 4450 3850 4450
 Text GLabel 3400 6700 0    39   Input ~ 0
 SD
-Text GLabel 3450 1300 0    39   Input ~ 0
-WS
-Wire Wire Line
-	3450 1300 3800 1300
 Text GLabel 3400 6600 0    39   Input ~ 0
 SCK
 Wire Wire Line
@@ -585,16 +581,9 @@ NoConn ~ 3550 6000
 NoConn ~ 3550 5900
 NoConn ~ 3550 5800
 NoConn ~ 3550 5700
-NoConn ~ 3550 5600
-NoConn ~ 3550 5500
 NoConn ~ 3550 5400
-NoConn ~ 3550 5300
-NoConn ~ 3550 5200
 NoConn ~ 3850 4650
 NoConn ~ 3850 3950
-NoConn ~ 3850 3400
-NoConn ~ 3850 3300
-NoConn ~ 3850 3200
 NoConn ~ 3850 3100
 NoConn ~ 3850 3000
 NoConn ~ 3850 2900
@@ -606,8 +595,6 @@ NoConn ~ 3850 2400
 NoConn ~ 3850 2300
 NoConn ~ 3850 2200
 NoConn ~ 3850 2100
-NoConn ~ 3800 900 
-NoConn ~ 3800 1400
 Wire Wire Line
 	3650 4650 3650 4750
 $Comp
@@ -665,12 +652,44 @@ U 5F92E566
 F0 "tmc" 39
 F1 "tmc.sch" 39
 $EndSheet
-Text GLabel 3350 1900 0    39   Output ~ 0
+Text GLabel 3250 5500 0    39   Output ~ 0
 TMC-CLK
-Text GLabel 3350 2000 0    39   Output ~ 0
+Text GLabel 3250 5200 0    39   Output ~ 0
 TMC-MOSI
-Text GLabel 3350 2100 0    39   Output ~ 0
+Text GLabel 3250 5300 0    39   Input ~ 0
 TMC-MISO
-Text GLabel 3350 1800 0    39   Output ~ 0
+Text GLabel 3250 5600 0    39   Output ~ 0
 TMC-CS
+Wire Wire Line
+	3250 5200 3550 5200
+Wire Wire Line
+	3550 5300 3250 5300
+Wire Wire Line
+	3250 5500 3550 5500
+Wire Wire Line
+	3550 5600 3250 5600
+Text GLabel 3450 900  0    39   Input ~ 0
+TMC-SW-3V3
+Text GLabel 3400 3400 0    39   Output ~ 0
+TMC-VIN
+Text GLabel 3400 3300 0    39   Input ~ 0
+TMC-ENABLE
+Text GLabel 3400 3200 0    39   Input ~ 0
+TMC-DIR
+Text GLabel 3450 1300 0    39   Input ~ 0
+TMC-STEP
+Wire Wire Line
+	3450 1300 3800 1300
+Wire Wire Line
+	3450 900  3800 900 
+Wire Wire Line
+	3800 1400 3450 1400
+Wire Wire Line
+	3400 3400 3850 3400
+Wire Wire Line
+	3400 3300 3850 3300
+Text GLabel 3450 1400 0    39   Input ~ 0
+VREF
+Wire Wire Line
+	3400 3200 3850 3200
 $EndSCHEMATC

@@ -559,7 +559,6 @@ NoConn ~ 3850 2600
 NoConn ~ 3850 2500
 NoConn ~ 3850 2400
 NoConn ~ 3850 2300
-NoConn ~ 3850 2200
 Wire Wire Line
 	3650 4650 3650 4750
 $Comp
@@ -635,7 +634,7 @@ Text GLabel 3400 3100 0    39   Input ~ 0
 TMC-SW-3V3
 Text GLabel 3400 2100 0    39   Output ~ 0
 TMC-VIN
-Text GLabel 3400 3300 0    39   Input ~ 0
+Text GLabel 3400 2200 0    39   Input ~ 0
 TMC-ENABLE
 Text GLabel 3400 3200 0    39   Input ~ 0
 TMC-DIR
@@ -648,7 +647,7 @@ Wire Wire Line
 Wire Wire Line
 	3400 2100 3850 2100
 Wire Wire Line
-	3400 3300 3850 3300
+	3400 2200 3850 2200
 Text GLabel 3450 1400 0    39   Input ~ 0
 VREF
 Wire Wire Line

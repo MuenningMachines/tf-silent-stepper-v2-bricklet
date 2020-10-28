@@ -1,6 +1,6 @@
-update=Di 27 Okt 2020 14:07:48 CET
+update=Mi 28 Okt 2020 11:09:35 CET
 version=1
-last_client=kicad
+last_client=pcbnew
 [cvpcb]
 version=1
 NetITyp=0
@@ -36,7 +36,7 @@ AllowMicroVias=0
 AllowBlindVias=0
 RequireCourtyardDefinitions=0
 ProhibitOverlappingCourtyards=1
-MinTrackWidth=0.15
+MinTrackWidth=0.149
 MinViaDiameter=0.4
 MinViaDrill=0.25
 MinMicroViaDiameter=0.2
@@ -81,7 +81,7 @@ OthersTextSizeThickness=0.15
 OthersTextItalic=0
 OthersTextUpright=1
 SolderMaskClearance=0
-SolderMaskMinWidth=0.25
+SolderMaskMinWidth=0
 SolderPasteClearance=0
 SolderPasteRatio=-0
 [pcbnew/Layer.F.Cu]

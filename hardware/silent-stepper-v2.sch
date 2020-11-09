@@ -710,7 +710,7 @@ Wire Wire Line
 Text Notes 600  5200 0    39   ~ 0
 Status
 Text Notes 600  5500 0    39   ~ 0
-Fail
+Error
 Wire Wire Line
 	2350 5900 2450 5900
 Wire Wire Line

@@ -32,9 +32,9 @@
 
 #include "timer_irq.h"
 #include "voltage.h"
+#include "gpio.h"
 
 Stepper stepper;
-CoopTask stepper_task;
 
 extern const XMC_GPIO_CONFIG_t input_pullup_config;
 extern const XMC_GPIO_CONFIG_t input_default_config;
@@ -74,10 +74,8 @@ const uint32_t stepper_timer_velocity[]  = {
 	(STEPPER_CCU_CLK/2048)  / STEPPER_MAX_TIMER_VALUE,
 };
 
-void timer_irq(void) {
+void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code"))) timer_irq(void) {
 	gpio_check();
-	// TODO: Add second timer that starts counting with the IRQ-trigger
-	//       subtract this cound from period
 
 	stepper.time_base_counter--;
 	if(stepper.time_base_counter > 0) {
@@ -208,7 +206,7 @@ void stepper_make_step_speedramp(const int32_t steps) {
 	stepper_set_next_timer(stepper.velocity);
 }
 
-void stepper_set_next_timer(const uint32_t velocity) {
+void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code")))  stepper_set_next_timer(const uint32_t velocity) {
 	uint32_t velocity_use = velocity;
 	if(velocity == 0) {
 		if(stepper.state == STEPPER_STATE_DRIVE && stepper.velocity_goal != 0) {
@@ -230,25 +228,27 @@ void stepper_set_next_timer(const uint32_t velocity) {
 		}
 	}
 
+	XMC_CCU8_SLICE_ClearEvent(CCU80_CC80, XMC_CCU8_SLICE_IRQ_ID_PERIOD_MATCH);
 	timer_irq_new_time(i, stepper_timer_frequency[i] / velocity_use);
-//	if(!stepper_is_currently_running()) {
+
+	if(!stepper_is_currently_running()) {
 		stepper.running = true;
 		timer_irq_start();
-//	}
+	}
 }
 
-bool stepper_is_currently_running(void) {
+inline bool stepper_is_currently_running(void) {
 	return stepper.running;
 }
 
-void stepper_make_step(void) {
+void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code")))  stepper_make_step(void) {
 	// We change step pin back and force for one step each (dedge = 1)
 	XMC_GPIO_ToggleOutput(TMC2130_STEP_PIN);
 
 	stepper.position += stepper.direction;
 }
 
-void stepper_step_speedramp(void) {
+void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code")))  stepper_step_speedramp(void) {
 	int32_t new_delay = 0;
 
 	switch(stepper.speedramp_state) {
@@ -267,8 +267,8 @@ void stepper_step_speedramp(void) {
 			stepper.step_counter++;
 			stepper.acceleration_counter++;
 
-			int32_t a = (2*stepper.delay + stepper.delay_rest);
-			int32_t b = (4*stepper.acceleration_counter + 1);
+			const int32_t a = (2*stepper.delay + stepper.delay_rest);
+			const int32_t b = (4*stepper.acceleration_counter + 1);
 			new_delay = stepper.delay - a/b;
 			stepper.delay_rest = a % b;
 
@@ -302,8 +302,8 @@ void stepper_step_speedramp(void) {
 			stepper.step_counter++;
 			stepper.acceleration_counter++;
 
-			int32_t a = (2*stepper.delay + stepper.delay_rest);
-			int32_t b = (4*stepper.acceleration_counter + 1);
+			const int32_t a = (2*stepper.delay + stepper.delay_rest);
+			const int32_t b = (4*stepper.acceleration_counter + 1);
 			new_delay = stepper.delay - a/b;
 			stepper.delay_rest = a % b;
 
@@ -334,7 +334,7 @@ void stepper_full_brake(void) {
 	stepper.velocity = 0;
 }
 
-void stepper_drive_speedramp(void) {
+void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code")))  stepper_drive_speedramp(void) {
 	static uint32_t rest = 0;
 	uint16_t goal = stepper.velocity_goal;
 
@@ -412,7 +412,7 @@ void stepper_drive_speedramp(void) {
 	}
 }
 
-void stepper_set_direction(const int8_t direction) {
+void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code"))) stepper_set_direction(const int8_t direction) {
 	if(direction == stepper.direction) {
 		return;
 	}
@@ -469,7 +469,7 @@ int32_t stepper_get_remaining_steps(void) {
 	return 0;
 }
 
-void stepper_set_new_api_state(const uint8_t new_state) {
+void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code")))  stepper_set_new_api_state(const uint8_t new_state) {
 	stepper.api_prev_state = stepper.api_state;
 	stepper.api_state = new_state;
 	stepper.api_state_send = true;

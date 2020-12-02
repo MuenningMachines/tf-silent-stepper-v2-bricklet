@@ -119,6 +119,7 @@ void stepper_init(void);
 void stepper_reset(void);
 void stepper_set_step_mode(const uint8_t mode);
 uint8_t stepper_get_step_mode(void);
+void stepper_stop(void);
 void stepper_set_decay(const uint16_t decay);
 void stepper_enable(void);
 void stepper_disable(void);

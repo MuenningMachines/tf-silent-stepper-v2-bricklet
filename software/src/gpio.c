@@ -118,6 +118,8 @@ void gpio_init(void) {
 }
 
 void gpio_tick(void) {
+	// if the stepper is not running we call gpio_check from the tick to make
+	// sure that the gpio state even updates when the stepper motor is not used.
 	if(!stepper_is_currently_running()) {
 		gpio_check();
 	}

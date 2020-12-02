@@ -31,18 +31,27 @@
 
 GPIO gpio;
 
+#define GPIO_PIN_MASK ((1 << GPIO_0_PIN) | (1 << GPIO_1_PIN))
+
 // It was not easily possible to route the GPIOs to ERU (interrupt) pins on the
 // Silent Stepper Bricklet 2.0 PCB. Instead of using interrupts we check the gpio state before each step.
 inline void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code"))) gpio_check(void) {
+	static uint32_t last_interrupt_bitmask = 0;
+
+	// We check if a GPIO value has changed as fast as possible with a bitmask,
+	// so this gpio_check function uses the least amount of time possible.
 	const uint32_t gpio_port_value = GPIO_PORT->IN;
+	if((gpio_port_value & GPIO_PIN_MASK) == last_interrupt_bitmask) {
+		return;
+	}
 
 	const bool value0 = gpio_port_value & (1 << GPIO_0_PIN);
 	if((gpio.last_interrupt_value[0] != value0) && (gpio.last_interrupt_time[0] == 0)) {
 		gpio.last_interrupt_value[0] = value0;
+		last_interrupt_bitmask = (gpio.last_interrupt_value[0] << GPIO_0_PIN) | (gpio.last_interrupt_value[1] << GPIO_1_PIN);
 		if(gpio.debounce[0] != 0) {
-			gpio.last_interrupt_time[0]  = system_timer_get_ms();
+			gpio.last_interrupt_time[0] = system_timer_get_ms();
 		}
-		logd("gpio0: %d\n\r", value0);
 
 		// Check if action is necessary
 		if(value0 && (gpio.action[0] & SILENT_STEPPER_V2_GPIO_ACTION_FULL_BRAKE_RISING_EDGE)) {
@@ -65,10 +74,10 @@ inline void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code
 	const bool value1 = gpio_port_value & (1 << GPIO_1_PIN);
 	if((gpio.last_interrupt_value[1] != value1) && (gpio.last_interrupt_time[1] == 0)) {
 		gpio.last_interrupt_value[1] = value1;
+		last_interrupt_bitmask = (gpio.last_interrupt_value[0] << GPIO_0_PIN) | (gpio.last_interrupt_value[1] << GPIO_1_PIN);
 		if(gpio.debounce[1] != 0) {
-			gpio.last_interrupt_time[1]  = system_timer_get_ms();
+			gpio.last_interrupt_time[1] = system_timer_get_ms();
 		}
-		logd("gpio1: %d\n\r", value1);
 
 		// Check if action is necessary
 		if(value1 && (gpio.action[1] & SILENT_STEPPER_V2_GPIO_ACTION_FULL_BRAKE_RISING_EDGE)) {

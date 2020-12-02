@@ -26,13 +26,14 @@
 #include "xmc_gpio.h"
 
 void timer_irq_init(void) {
-    XMC_CCU8_Init(CCU80, XMC_CCU8_SLICE_MCMS_ACTION_TRANSFER_PR_CR);
-    XMC_CCU8_StartPrescaler(CCU80);
+	XMC_CCU8_SetModuleClock(CCU80, XMC_CCU8_CLOCK_SCU);
+	XMC_CCU8_Init(CCU80, XMC_CCU8_SLICE_MCMS_ACTION_TRANSFER_PR_CR);
+	XMC_CCU8_StartPrescaler(CCU80);
 	XMC_CCU8_EnableClock(CCU80, 0);
 
 	XMC_CCU8_SLICE_COMPARE_CONFIG_t ccu8_slice_config = {
 		.timer_mode          = XMC_CCU8_SLICE_TIMER_COUNT_MODE_EA,
-		.monoshot            = XMC_CCU8_SLICE_TIMER_REPEAT_MODE_SINGLE,
+		.monoshot            = XMC_CCU8_SLICE_TIMER_REPEAT_MODE_REPEAT,
 		.shadow_xfer_clear   = false,
 		.dither_timer_period = false,
 		.dither_duty_cycle   = false,
@@ -45,6 +46,10 @@ void timer_irq_init(void) {
 		.passive_level_out2  = XMC_CCU8_SLICE_OUTPUT_PASSIVE_LEVEL_LOW, 
 		.passive_level_out3  = XMC_CCU8_SLICE_OUTPUT_PASSIVE_LEVEL_LOW, 
 		.asymmetric_pwm      = false,
+		.selector_out0       = XMC_CCU8_SOURCE_OUT0_ST1,
+		.selector_out1       = XMC_CCU8_SOURCE_OUT1_ST1,
+		.selector_out2       = XMC_CCU8_SOURCE_OUT2_ST2,
+		.selector_out3       = XMC_CCU8_SOURCE_OUT3_ST2,
 		.prescaler_initval   = 0,
 		.float_limit         = 0,
 		.dither_limit        = 0,

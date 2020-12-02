@@ -578,6 +578,7 @@ void tmc2130_task_tick(void) {
 
 		// Power TMC2130 if input voltage is connected and above voltage minimum
 		if(stepper.minimum_voltage < voltage.value) {
+			stepper.minimum_voltage_cb_done = false;
 			tmc2130_set_active(true);
 		} else {
 			tmc2130_set_active(false);
@@ -626,6 +627,8 @@ void tmc2130_tick(void) {
 void tmc2130_init(void) {
 	memset(&tmc2130, 0, sizeof(TMC2130));
 
+	// Set minimum voltage cb to done, we don't want to send UnderVoltage callbacks on startup
+	stepper.minimum_voltage_cb_done = true;
 	tmc2130_deactivate();
 
 	XMC_GPIO_Init(TMC2130_ERROR_LED_PIN, &output_high_config);

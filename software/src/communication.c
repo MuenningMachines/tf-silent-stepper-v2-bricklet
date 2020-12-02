@@ -24,6 +24,7 @@
 #include "bricklib2/utility/communication_callback.h"
 #include "bricklib2/utility/util_definitions.h"
 #include "bricklib2/utility/sqrt.h"
+#include "bricklib2/hal/system_timer/system_timer.h"
 #include "bricklib2/protocols/tfp/tfp.h"
 
 #include "configs/config_tmc2130.h"
@@ -594,14 +595,14 @@ BootloaderHandleMessageResponse get_all_data(const GetAllData *data, GetAllData_
 }
 
 BootloaderHandleMessageResponse set_all_callback_configuration(const SetAllCallbackConfiguration *data) {
-	// TODO
+	stepper.all_data_period = data->period;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_all_data_callback_configuraton(const GetAllDataCallbackConfiguraton *data, GetAllDataCallbackConfiguraton_Response *response) {
 	response->header.length = sizeof(GetAllDataCallbackConfiguraton_Response);
-	// TODO
+	response->period        = stepper.all_data_period;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
@@ -664,10 +665,17 @@ bool handle_under_voltage_callback(void) {
 	static UnderVoltage_Callback cb;
 
 	if(!is_buffered) {
-		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(UnderVoltage_Callback), FID_CALLBACK_UNDER_VOLTAGE);
-		// TODO: Implement UnderVoltage callback handling
+		if(stepper.minimum_voltage_cb_done) {
+			return false;
+		}
 
-		return false;
+		if(stepper.minimum_voltage <= voltage.value) {
+			return false;
+		}
+
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(UnderVoltage_Callback), FID_CALLBACK_UNDER_VOLTAGE);
+		cb.voltage                      = voltage.value;
+		stepper.minimum_voltage_cb_done = true;
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
@@ -686,10 +694,14 @@ bool handle_position_reached_callback(void) {
 	static PositionReached_Callback cb;
 
 	if(!is_buffered) {
-		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(PositionReached_Callback), FID_CALLBACK_POSITION_REACHED);
-		// TODO: Implement PositionReached callback handling
+		if(!stepper.position_reached) {
+			return false;
+		}
 
-		return false;
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(PositionReached_Callback), FID_CALLBACK_POSITION_REACHED);
+		cb.position              = stepper.position;
+		stepper.position_reached = false;
+
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
@@ -706,12 +718,24 @@ bool handle_position_reached_callback(void) {
 bool handle_all_data_callback(void) {
 	static bool is_buffered = false;
 	static AllData_Callback cb;
+	static uint32_t last_time = 0;
 
 	if(!is_buffered) {
-		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(AllData_Callback), FID_CALLBACK_ALL_DATA);
-		// TODO: Implement AllData callback handling
+		if((stepper.all_data_period == 0) || !system_timer_is_time_elapsed_ms(last_time, stepper.all_data_period)) {
+			return false;
+		}
 
-		return false;
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(AllData_Callback), FID_CALLBACK_ALL_DATA);
+		cb.current_velocity    = stepper.velocity > 0xFFFF ? 0xFFFF : stepper.velocity;
+		cb.current_position    = stepper.position;
+		cb.remaining_steps     = stepper_get_remaining_steps();
+		cb.input_voltage       = voltage.value;
+		if(stepper.state == STEPPER_STATE_OFF) {
+			cb.current_consumption = 0;
+		} else {
+			cb.current_consumption = (tmc2130_high_level.motor_run_current * (tmc2130_reg_drv_status.bit.cs_actual + 1)) / 32;
+		}
+
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
@@ -730,10 +754,15 @@ bool handle_new_state_callback(void) {
 	static NewState_Callback cb;
 
 	if(!is_buffered) {
-		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(NewState_Callback), FID_CALLBACK_NEW_STATE);
-		// TODO: Implement NewState callback handling
+		if(!stepper.api_state_send) {
+			return false;
+		}
 
-		return false;
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(NewState_Callback), FID_CALLBACK_NEW_STATE);
+		cb.state_previous      = stepper.api_prev_state;
+		cb.state_new           = stepper.api_state;
+		stepper.api_state_send = false;
+
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {

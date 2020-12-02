@@ -99,10 +99,11 @@ typedef struct {
 	uint32_t time_base;
 	uint32_t time_base_counter;
 	uint32_t all_data_period;
-	uint32_t all_data_period_counter;
 
 	bool running;
 	bool position_reached;
+
+	bool minimum_voltage_cb_done;
 
 	uint8_t api_state;
 	uint8_t api_prev_state;

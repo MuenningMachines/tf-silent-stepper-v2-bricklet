@@ -492,6 +492,9 @@ void stepper_init(void) {
 	stepper.time_base_counter = 1;
 
 	tmc2130_set_active(false);
+
+	// Set minimum voltage cb to done, we don't want to send UnderVoltage callbacks on startu
+	stepper.minimum_voltage_cb_done = true;
 }
 
 void stepper_tick(void) {

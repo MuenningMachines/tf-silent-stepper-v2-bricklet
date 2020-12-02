@@ -540,8 +540,42 @@ void tmc2130_set_active(const bool active) {
 	}
 }
 
+static void tmc2130_task_handle_error_led(void) {
+	static uint32_t last_time = 0;
+
+	if(tmc2130.error_led_flicker_state.config == LED_FLICKER_CONFIG_HEARTBEAT) {
+		led_flicker_tick(&tmc2130.error_led_flicker_state, system_timer_get_ms(), TMC2130_ERROR_LED_PIN);
+	} else if(tmc2130.error_led_flicker_state.config == SILENT_STEPPER_V2_ERROR_LED_CONFIG_SHOW_ERROR) {
+		uint32_t error = 0;
+		if(voltage.value < stepper.minimum_voltage) {
+			error = 500;
+		}
+
+		if(tmc2130_reg_drv_status.bit.otpw) {
+			error = 125;
+		}
+
+		if(tmc2130_reg_drv_status.bit.s2gb || tmc2130_reg_drv_status.bit.s2ga || tmc2130_reg_drv_status.bit.ot) {
+			error = 1;
+		}
+
+		if(error == 0) {
+			XMC_GPIO_SetOutputHigh(TMC2130_ERROR_LED_PIN);
+		} else if (error == 1) {
+			XMC_GPIO_SetOutputHigh(TMC2130_ERROR_LED_PIN);
+		} else {
+			if(system_timer_is_time_elapsed_ms(last_time, error)) {
+				XMC_GPIO_ToggleOutput(TMC2130_ERROR_LED_PIN);
+				last_time = system_timer_get_ms();
+			}
+		}
+	}
+}
+
 void tmc2130_task_tick(void) {
 	while(true) {
+		tmc2130_task_handle_error_led();
+
 		// Power TMC2130 if input voltage is connected and above voltage minimum
 		if(stepper.minimum_voltage < voltage.value) {
 			tmc2130_set_active(true);
@@ -594,11 +628,7 @@ void tmc2130_init(void) {
 
 	tmc2130_deactivate();
 
-//	ccu4_pwm_init(TMC2130_CLK_PIN, TMC2130_CLK_SLICE, 8 - 1);
-//	ccu4_pwm_set_duty_cycle(TMC2130_CLK_SLICE, 4);
-
-//	tmc2130_init_vref(); // TODO -> crashes?
-
+	XMC_GPIO_Init(TMC2130_ERROR_LED_PIN, &output_high_config);
 	tmc2130.error_led_flicker_state.config = SILENT_STEPPER_V2_ERROR_LED_CONFIG_SHOW_ERROR;
 
 	coop_task_init(&tmc2130_task, tmc2130_task_tick);

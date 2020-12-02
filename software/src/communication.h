@@ -602,8 +602,7 @@ typedef struct {
 	uint16_t current_velocity;
 	int32_t current_position;
 	int32_t remaining_steps;
-	uint16_t stack_voltage;
-	uint16_t external_voltage;
+	uint16_t input_voltage;
 	uint16_t current_consumption;
 } __attribute__((__packed__)) AllData_Callback;
 

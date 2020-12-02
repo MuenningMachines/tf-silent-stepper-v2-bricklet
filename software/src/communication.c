@@ -26,6 +26,8 @@
 #include "bricklib2/utility/sqrt.h"
 #include "bricklib2/protocols/tfp/tfp.h"
 
+#include "configs/config_tmc2130.h"
+
 #include "stepper.h"
 #include "tmc2130.h"
 #include "voltage.h"
@@ -502,7 +504,22 @@ BootloaderHandleMessageResponse get_misc_configuration(const GetMiscConfiguratio
 }
 
 BootloaderHandleMessageResponse set_error_led_config(const SetErrorLEDConfig *data) {
-	// TODO
+	if(data->config > SILENT_STEPPER_V2_ERROR_LED_CONFIG_SHOW_ERROR) {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}
+
+	tmc2130.error_led_flicker_state.config = data->config;
+	switch(data->config) {
+		case SILENT_STEPPER_V2_ERROR_LED_CONFIG_OFF:
+			XMC_GPIO_SetOutputHigh(TMC2130_ERROR_LED_PIN);
+			break;
+
+		case SILENT_STEPPER_V2_ERROR_LED_CONFIG_ON:
+			XMC_GPIO_SetOutputLow(TMC2130_ERROR_LED_PIN);
+			break;
+
+		default: break;
+	}
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }

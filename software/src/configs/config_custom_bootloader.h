@@ -39,6 +39,9 @@
 
 #define BOOTLOADER_FIX_POINTER_END
 
+// Use the memory optimized irq handler, since it does never disable IRQs
+#define BOOTLOADER_USE_MEMORY_OPTIMIZED_IRQ_HANDLER
+
 // --- Oscillator defines ---
 
 #define OSCHP_FREQUENCY 16000000

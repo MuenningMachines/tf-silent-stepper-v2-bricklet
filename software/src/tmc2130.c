@@ -33,6 +33,7 @@
 #include "configs/config_tmc2130.h"
 #include "communication.h"
 #include "stepper.h"
+#include "voltage.h"
 
 #include "xmc_gpio.h"
 #include "xmc_ccu4.h"
@@ -541,6 +542,13 @@ void tmc2130_set_active(const bool active) {
 
 void tmc2130_task_tick(void) {
 	while(true) {
+		// Power TMC2130 if input voltage is connected and above voltage minimum
+		if(stepper.minimum_voltage < voltage.value) {
+			tmc2130_set_active(true);
+		} else {
+			tmc2130_set_active(false);
+		}
+
 		if(!tmc2130.is_active) {
 			coop_task_yield();
 			continue;

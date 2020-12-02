@@ -475,19 +475,6 @@ void stepper_set_new_api_state(const uint8_t new_state) {
 	stepper.api_state_send = true;
 }
 
-void stepper_task_tick(void) {
-	while(true) {
-		coop_task_yield();
-
-		// Power TMC2130 if input voltage is connected and above voltage minimum
-		if(stepper.minimum_voltage < voltage.value) {
-			tmc2130_set_active(true);
-		} else {
-			tmc2130_set_active(false);
-		}
-	}
-}
-
 void stepper_init(void) {
 	memset(&stepper, 0, sizeof(Stepper));
 
@@ -504,12 +491,10 @@ void stepper_init(void) {
 	stepper.time_base         = 1;
 	stepper.time_base_counter = 1;
 
-	coop_task_init(&stepper_task, stepper_task_tick);
-	
 	tmc2130_set_active(false);
 }
 
 void stepper_tick(void) {
-	coop_task_tick(&stepper_task);
+	// Nothing
 }
 

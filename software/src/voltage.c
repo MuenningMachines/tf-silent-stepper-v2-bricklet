@@ -30,6 +30,8 @@
 Voltage voltage;
 
 void voltage_init(void) {
+	memset(&voltage, 0, sizeof(Voltage));
+
 	const XMC_GPIO_CONFIG_t input_pin_config = {
 		.mode             = XMC_GPIO_MODE_INPUT_TRISTATE,
 		.input_hysteresis = XMC_GPIO_INPUT_HYSTERESIS_STANDARD,
@@ -180,15 +182,13 @@ void voltage_tick(void) {
 		voltage.value_sum += result & 0xFFFF;
 		voltage.value_sum_count++;
 	}
-	
 
 	if(system_timer_is_time_elapsed_ms(voltage.last_time, 100)) {
 		if(voltage.value_sum_count > 0) {
 			// Resistor divider: 1:15
 			// mV = adc*3300*16 / (4095*4) = 880/273 ~= 16/5
-			voltage.value = voltage.value_sum*16/(voltage.value_sum_count*5);
-
-			voltage.value_sum = 0;
+			voltage.value           = voltage.value_sum*16/(voltage.value_sum_count*5);
+			voltage.value_sum       = 0;
 			voltage.value_sum_count = 0;
 		}
 		

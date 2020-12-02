@@ -23,6 +23,7 @@
 
 #include "bricklib2/utility/communication_callback.h"
 #include "bricklib2/utility/util_definitions.h"
+#include "bricklib2/utility/sqrt.h"
 #include "bricklib2/protocols/tfp/tfp.h"
 
 #include "stepper.h"
@@ -145,8 +146,9 @@ BootloaderHandleMessageResponse get_current_velocity(const GetCurrentVelocity *d
 }
 
 BootloaderHandleMessageResponse set_speed_ramping(const SetSpeedRamping *data) {
-	stepper.acceleration = data->acceleration;
-	stepper.deceleration = data->deacceleration;
+	stepper.acceleration_sqrt = sqrt_integer_precise(data->acceleration);
+	stepper.acceleration      = data->acceleration;
+	stepper.deceleration      = data->deacceleration;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }

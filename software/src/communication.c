@@ -119,13 +119,12 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 	}
 }
 
-void IRQ_Hdlr_1(void);
 BootloaderHandleMessageResponse set_max_velocity(const SetMaxVelocity *data) {
 	uint32_t old_velocity_goal = stepper.velocity_goal;
 	stepper.velocity_goal = data->velocity;
 
 	if(stepper.state == STEPPER_STATE_DRIVE && old_velocity_goal == 0) {
-		IRQ_Hdlr_1();
+		stepper_set_next_timer(stepper.velocity);
 	}
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;

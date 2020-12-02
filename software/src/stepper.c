@@ -127,7 +127,7 @@ void stepper_make_drive_speedramp(const uint8_t state) {
 		// call drive speedramp one time, to get it going
 		// (i.e. make velocity != 0)
 		stepper_drive_speedramp();
-		timer_irq();
+		stepper_set_next_timer(stepper.velocity);
 	}
 }
 
@@ -151,7 +151,7 @@ void stepper_make_step_speedramp(const int32_t steps) {
 	}
 
 	if(use_steps == 1) {
-		// Just make the single step, no need for TC IRQ
+		// Just make the single step, no need for IRQ
 		stepper_make_step();
 		stepper.position_reached = true;
 		stepper_set_new_api_state(STEPPER_API_STATE_RUN);
@@ -205,7 +205,7 @@ void stepper_make_step_speedramp(const int32_t steps) {
 	stepper.speedramp_state = STEPPER_SPEEDRAMP_STATE_ACCELERATION;
 	stepper_set_new_api_state(STEPPER_API_STATE_ACCELERATION);
 
-	timer_irq();
+	stepper_set_next_timer(stepper.velocity);
 }
 
 void stepper_set_next_timer(const uint32_t velocity) {

@@ -206,6 +206,7 @@ BootloaderHandleMessageResponse set_steps(const SetSteps *data) {
 
 	stepper.state = STEPPER_STATE_STEPS;
 	stepper.steps = data->steps;
+	stepper_make_step_speedramp(data->steps);
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }

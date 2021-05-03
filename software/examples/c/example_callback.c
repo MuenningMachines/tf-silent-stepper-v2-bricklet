@@ -55,7 +55,7 @@ int main(void) {
 	silent_stepper_v2_register_callback(&ss,
 	                                    SILENT_STEPPER_V2_CALLBACK_POSITION_REACHED,
 	                                    (void (*)(void))cb_position_reached,
-	                                    NULL);
+	                                    &ss);
 
 	silent_stepper_v2_set_step_configuration(&ss, SILENT_STEPPER_V2_STEP_RESOLUTION_8,
 	                                         true); // 1/8 steps (interpolated)

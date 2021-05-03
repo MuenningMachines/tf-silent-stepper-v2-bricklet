@@ -1,0 +1,35 @@
+Needs["NETLink`"]
+LoadNETAssembly["Tinkerforge",NotebookDirectory[]<>"../../.."]
+
+host="localhost"
+port=4223
+uid="XYZ"(*Change XYZ to the UID of your Silent Stepper Bricklet 2.0*)
+
+(*Create IPConnection and device object*)
+ipcon=NETNew["Tinkerforge.IPConnection"]
+ss=NETNew["Tinkerforge.BrickletSilentStepperV2",uid,ipcon]
+ipcon@Connect[host,port]
+
+ss@SetMotorCurrent[800](*800 mA*)
+ss@SetStepConfiguration[Tinkerforge`BrickletSilentStepperV2`STEPURESOLUTIONU8,
+                        True](*1/8 steps (interpolated)*)
+ss@SetMaxVelocity[2000](*Velocity 2000 steps/s*)
+
+(*Slow acceleration (500 steps/s^2),*)
+(*Fast deacceleration (5000 steps/s^2)*)
+ss@SetSpeedRamping[500,5000]
+
+ss@SetEnabled[True](*Enable motor power*)
+ss@SetSteps[60000](*Drive 60000 steps forward*)
+
+Input["Click OK to exit"]
+
+(*Stop motor before disabling motor power*)
+ss@Stop[](*Request motor stop*)
+ss@SetSpeedRamping[500,5000](*Fast deacceleration (5000 steps/s^2) for stopping*)
+Pause[0.4](*Wait for motor to actually stop: max velocity (2000 steps/s) / decceleration (5000 steps/s^2) = 0.4 s*)
+ss@SetEnabled[False](*Disable motor power*)
+
+ipcon@Disconnect[]
+ReleaseNETObject[ss]
+ReleaseNETObject[ipcon]

@@ -1,0 +1,50 @@
+Notebook[{
+ Cell[
+  BoxData[{
+   RowBox[{"Needs", "[", "\"\<NETLink`\>\"", "]"}],
+   RowBox[{"LoadNETAssembly", "[", RowBox[{"\"\<Tinkerforge\>\"", ",", RowBox[{RowBox[{"NotebookDirectory", "[", "]"}], "<>", "\"\<../../..\>\""}]}], "]"}]
+  }], "Input"
+ ],
+ Cell[
+  BoxData[{
+   RowBox[{"host", "=", "\"\<localhost\>\""}],
+   RowBox[{"port", "=", "4223"}],
+   RowBox[{"uid", "=", "\"\<XYZ\>\"", RowBox[{"(*", "Change XYZ to the UID of your Silent Stepper Bricklet 2.0", "*)"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Create IPConnection and device object", "*)"}],
+   RowBox[{"ipcon", "=", RowBox[{"NETNew", "[", "\"\<Tinkerforge.IPConnection\>\"", "]"}]}],
+   RowBox[{"ss", "=", RowBox[{"NETNew", "[", RowBox[{"\"\<Tinkerforge.BrickletSilentStepperV2\>\"", ",", "uid", ",", "ipcon"}], "]"}]}],
+   RowBox[{"ipcon", "@", RowBox[{"Connect", "[", RowBox[{"host", ",", "port"}], "]"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"ss", "@", RowBox[{"SetMotorCurrent", "[", "800", "]"}], RowBox[{"(*", "800 mA", "*)"}]}],
+   RowBox[{"ss", "@", RowBox[{"SetStepConfiguration", "[", RowBox[{"Tinkerforge`BrickletSilentStepperV2`STEPURESOLUTIONU8", ",", RowBox[{"\[IndentingNewLine]", "True"}]}], "]"}], RowBox[{"(*", "1/8 steps (interpolated)", "*)"}]}],
+   RowBox[{"ss", "@", RowBox[{"SetMaxVelocity", "[", "2000", "]"}], RowBox[{"(*", "Velocity 2000 steps/s", "*)"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Slow acceleration (500 steps/s^2),", "*)"}],
+   RowBox[{"(*", "Fast deacceleration (5000 steps/s^2)", "*)"}],
+   RowBox[{"ss", "@", RowBox[{"SetSpeedRamping", "[", RowBox[{"500", ",", "5000"}], "]"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"ss", "@", RowBox[{"SetEnabled", "[", "True", "]"}], RowBox[{"(*", "Enable motor power", "*)"}]}],
+   RowBox[{"ss", "@", RowBox[{"SetSteps", "[", "60000", "]"}], RowBox[{"(*", "Drive 60000 steps forward", "*)"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"Input", "[", "\"\<Click OK to exit\>\"", "]"}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Stop motor before disabling motor power", "*)"}],
+   RowBox[{"ss", "@", RowBox[{"Stop", "[", "]"}], RowBox[{"(*", "Request motor stop", "*)"}]}],
+   RowBox[{"ss", "@", RowBox[{"SetSpeedRamping", "[", RowBox[{"500", ",", "5000"}], "]"}], RowBox[{"(*", "Fast deacceleration (5000 steps/s^2) for stopping", "*)"}]}],
+   RowBox[{RowBox[{"Pause", "[", "0.4", "]"}], RowBox[{"(*", "Wait for motor to actually stop: max velocity (2000 steps/s) / decceleration (5000 steps/s^2) = 0.4 s", "*)"}]}],
+   RowBox[{"ss", "@", RowBox[{"SetEnabled", "[", "False", "]"}], RowBox[{"(*", "Disable motor power", "*)"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"ipcon", "@", RowBox[{"Disconnect", "[", "]"}]}],
+   RowBox[{"ReleaseNETObject", "[", "ss", "]"}],
+   RowBox[{"ReleaseNETObject", "[", "ipcon", "]"}]
+  }], "Input"
+ ]
+}]

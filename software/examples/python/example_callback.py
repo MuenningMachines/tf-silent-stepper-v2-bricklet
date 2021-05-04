@@ -6,6 +6,7 @@ PORT = 4223
 UID = "XYZ" # Change XYZ to the UID of your Silent Stepper Bricklet 2.0
 
 import time
+import random
 
 from tinkerforge.ip_connection import IPConnection
 from tinkerforge.bricklet_silent_stepper_v2 import BrickletSilentStepperV2

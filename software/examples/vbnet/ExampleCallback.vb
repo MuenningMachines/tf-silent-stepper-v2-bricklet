@@ -10,7 +10,7 @@ Module ExampleCallback
     Dim rand As Random = New Random()
 
     ' Use position reached callback to program random movement
-    Sub PositionReachedCB(ByVal sender As BrickSilentStepperV2, ByVal position As Integer)
+    Sub PositionReachedCB(ByVal sender As BrickletSilentStepperV2, ByVal position As Integer)
         Dim steps As Integer
 
         If rand.Next(0, 2) = 0 Then

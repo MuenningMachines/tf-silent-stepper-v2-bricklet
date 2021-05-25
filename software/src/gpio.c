@@ -1,5 +1,5 @@
 /* silent-stepper-v2-bricklet
- * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
  *
  * gpio.c: Driver for GPIO inputs/interrupts
  *
@@ -48,6 +48,12 @@ inline void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code
 	const bool value0 = gpio_port_value & (1 << GPIO_0_PIN);
 	if((gpio.last_interrupt_value[0] != value0) && (gpio.last_interrupt_time[0] == 0)) {
 		gpio.last_interrupt_value[0] = value0;
+		// Check for callback
+		if(( value0 && (gpio.action[0] & SILENT_STEPPER_V2_GPIO_ACTION_CALLBACK_RISING_EDGE)) ||
+		(!value0 && (gpio.action[0] & SILENT_STEPPER_V2_GPIO_ACTION_CALLBACK_FALLING_EDGE))) {
+			gpio.new_callback = true;
+		}
+
 		last_interrupt_bitmask = (gpio.last_interrupt_value[0] << GPIO_0_PIN) | (gpio.last_interrupt_value[1] << GPIO_1_PIN);
 		if(gpio.debounce[0] != 0) {
 			gpio.last_interrupt_time[0] = system_timer_get_ms();
@@ -74,6 +80,12 @@ inline void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code
 	const bool value1 = gpio_port_value & (1 << GPIO_1_PIN);
 	if((gpio.last_interrupt_value[1] != value1) && (gpio.last_interrupt_time[1] == 0)) {
 		gpio.last_interrupt_value[1] = value1;
+		// Check for callback
+		if(( value1 && (gpio.action[1] & SILENT_STEPPER_V2_GPIO_ACTION_CALLBACK_RISING_EDGE)) ||
+		(!value1 && (gpio.action[1] & SILENT_STEPPER_V2_GPIO_ACTION_CALLBACK_FALLING_EDGE))) {
+			gpio.new_callback = true;
+		}
+
 		last_interrupt_bitmask = (gpio.last_interrupt_value[0] << GPIO_0_PIN) | (gpio.last_interrupt_value[1] << GPIO_1_PIN);
 		if(gpio.debounce[1] != 0) {
 			gpio.last_interrupt_time[1] = system_timer_get_ms();

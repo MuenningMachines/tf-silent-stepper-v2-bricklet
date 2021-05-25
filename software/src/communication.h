@@ -1,5 +1,5 @@
 /* silent-stepper-v2-bricklet
- * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.h: TFP protocol message handling
  *
@@ -175,6 +175,7 @@ void communication_init(void);
 #define FID_CALLBACK_POSITION_REACHED 42
 #define FID_CALLBACK_ALL_DATA 53
 #define FID_CALLBACK_NEW_STATE 54
+#define FID_CALLBACK_GPIO_STATE 55
 
 typedef struct {
 	TFPMessageHeader header;
@@ -612,6 +613,11 @@ typedef struct {
 	uint8_t state_previous;
 } __attribute__((__packed__)) NewState_Callback;
 
+typedef struct {
+	TFPMessageHeader header;
+	uint8_t gpio_state[1];
+} __attribute__((__packed__)) GPIOState_Callback;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_max_velocity(const SetMaxVelocity *data);
@@ -668,14 +674,16 @@ bool handle_under_voltage_callback(void);
 bool handle_position_reached_callback(void);
 bool handle_all_data_callback(void);
 bool handle_new_state_callback(void);
+bool handle_gpio_state_callback(void);
 
 #define COMMUNICATION_CALLBACK_TICK_WAIT_MS 1
-#define COMMUNICATION_CALLBACK_HANDLER_NUM 4
+#define COMMUNICATION_CALLBACK_HANDLER_NUM 5
 #define COMMUNICATION_CALLBACK_LIST_INIT \
 	handle_under_voltage_callback, \
 	handle_position_reached_callback, \
 	handle_all_data_callback, \
 	handle_new_state_callback, \
+	handle_gpio_state_callback, \
 
 
 #endif

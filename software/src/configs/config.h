@@ -1,5 +1,5 @@
 /* silent-stepper-v2-bricklet
- * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
  *
  * config.h: All configurations for Silent Stepper Bricklet 2.0
  *
@@ -31,7 +31,7 @@
 
 #define FIRMWARE_VERSION_MAJOR 2
 #define FIRMWARE_VERSION_MINOR 0
-#define FIRMWARE_VERSION_REVISION 0
+#define FIRMWARE_VERSION_REVISION 1
 
 #define BOOTLOADER_DIV_USED_IN_IRQ
 #define COOP_TASK_STACK_SIZE 4096

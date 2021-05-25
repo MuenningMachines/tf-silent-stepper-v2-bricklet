@@ -1,5 +1,5 @@
 /* silent-stepper-v2-bricklet
- * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
  *
  * gpio.h: Driver for GPIO inputs/interrupts
  *
@@ -38,6 +38,8 @@ typedef struct {
 
 	bool stop_normal;
 	bool stop_emergency;
+
+	bool new_callback;
 } GPIO;
 
 extern GPIO gpio;

@@ -1,5 +1,5 @@
 /* silent-stepper-v2-bricklet
- * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.c: TFP protocol message handling
  *
@@ -767,6 +767,32 @@ bool handle_new_state_callback(void) {
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
 		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(NewState_Callback));
+		is_buffered = false;
+		return true;
+	} else {
+		is_buffered = true;
+	}
+
+	return false;
+}
+
+
+bool handle_gpio_state_callback(void) {
+	static bool is_buffered = false;
+	static GPIOState_Callback cb;
+
+	if(!is_buffered) {
+		if(!gpio.new_callback) {
+			return false;
+		}
+
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(GPIOState_Callback), FID_CALLBACK_GPIO_STATE);
+		cb.gpio_state[0]  = (gpio.last_interrupt_value[0] << 0) | (gpio.last_interrupt_value[1] << 1);
+		gpio.new_callback = false;
+	}
+
+	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(GPIOState_Callback));
 		is_buffered = false;
 		return true;
 	} else {

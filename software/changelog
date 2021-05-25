@@ -1,5 +1,5 @@
 2021-05-04: 2.0.0 (1a48ca7)
 - Initial version
 
-2021-05-25: 2.0.1 (TBD)
+2021-05-25: 2.0.1 (81326cd)
 - Add API for GPIO State callback

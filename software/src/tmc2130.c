@@ -493,10 +493,10 @@ void tmc2130_activate(void) {
 		XMC_GPIO_Init(TMC2130_STEP_PIN, &output_low_config);
 	}
 
-	if(tmc2130.pin_direction_output_save) {
-		XMC_GPIO_Init(TMC2130_DIR_PIN, &output_high_config);
-	} else {
+	if(stepper.direction == STEPPER_DIRECTION_FORWARD) {
 		XMC_GPIO_Init(TMC2130_DIR_PIN, &output_low_config);
+	} else {
+		XMC_GPIO_Init(TMC2130_DIR_PIN, &output_high_config);
 	}
 
 	XMC_GPIO_Init(TMC2130_SW_3V3_PIN, &output_high_config);
@@ -512,7 +512,6 @@ void tmc2130_deactivate(void) {
 
 	tmc2130.pin_enable_output_save    = XMC_GPIO_GetInput(TMC2130_ENABLE_PIN);
 	tmc2130.pin_step_output_save      = XMC_GPIO_GetInput(TMC2130_STEP_PIN);
-	tmc2130.pin_direction_output_save = XMC_GPIO_GetInput(TMC2130_DIR_PIN);
 
 	XMC_GPIO_Init(TMC2130_ENABLE_PIN, &input_default_config);
 	XMC_GPIO_Init(TMC2130_STEP_PIN,   &input_default_config);

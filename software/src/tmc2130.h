@@ -49,7 +49,6 @@ typedef struct {
 
 	bool pin_enable_output_save;
 	bool pin_step_output_save;
-	bool pin_direction_output_save;
 
 	uint32_t last_read_register_update;
 } TMC2130;

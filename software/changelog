@@ -3,3 +3,6 @@
 
 2021-05-25: 2.0.1 (81326cd)
 - Add API for GPIO State callback
+
+2021-06-23: 2.0.2 (TBD)
+- Make sure default direction is "forward"

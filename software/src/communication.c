@@ -736,6 +736,7 @@ bool handle_all_data_callback(void) {
 			cb.current_consumption = (tmc2130_high_level.motor_run_current * (tmc2130_reg_drv_status.bit.cs_actual + 1)) / 32;
 		}
 
+		last_time = system_timer_get_ms();
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {

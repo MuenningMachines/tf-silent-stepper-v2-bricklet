@@ -7,5 +7,5 @@
 2021-06-23: 2.0.2 (e032398)
 - Make sure default direction is "forward"
 
-2022-04-08: 2.0.3 (TBD)
+2022-04-08: 2.0.3 (dce894e)
 - Fix bug in AllData-Callback period handling

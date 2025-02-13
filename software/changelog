@@ -10,5 +10,5 @@
 2022-04-08: 2.0.3 (dce894e)
 - Fix bug in AllData-Callback period handling
 
-2025-02-05: 2.0.4 (TBD)
+2025-02-05: 2.0.4 (008b716)
 - Add MotorStalled-Callback

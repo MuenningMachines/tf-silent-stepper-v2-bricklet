@@ -1,7 +1,7 @@
 /* silent-stepper-v2-bricklet
  * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
  *
- * stepper.h: Driver for stepper motion 
+ * stepper.h: Driver for stepper motion
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -110,6 +110,7 @@ typedef struct {
 	bool api_state_send;
 
 	bool silent_mode_switched;
+	bool motor_stalled_enabled;
 } Stepper;
 
 extern Stepper stepper;

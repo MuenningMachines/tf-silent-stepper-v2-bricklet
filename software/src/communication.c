@@ -1,5 +1,5 @@
 /* silent-stepper-v2-bricklet
- * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2025 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.c: TFP protocol message handling
  *
@@ -70,55 +70,58 @@ extern TMC2130RegGCONF tmc2130_reg_gconf;
 extern TMC2130RegCHOPCONF tmc2130_reg_chopconf;
 
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
+	const uint8_t length = ((TFPMessageHeader*)message)->length;
 	switch(tfp_get_fid_from_message(message)) {
-		case FID_SET_MAX_VELOCITY: return set_max_velocity(message);
-		case FID_GET_MAX_VELOCITY: return get_max_velocity(message, response);
-		case FID_GET_CURRENT_VELOCITY: return get_current_velocity(message, response);
-		case FID_SET_SPEED_RAMPING: return set_speed_ramping(message);
-		case FID_GET_SPEED_RAMPING: return get_speed_ramping(message, response);
-		case FID_FULL_BRAKE: return full_brake(message);
-		case FID_SET_CURRENT_POSITION: return set_current_position(message);
-		case FID_GET_CURRENT_POSITION: return get_current_position(message, response);
-		case FID_SET_TARGET_POSITION: return set_target_position(message);
-		case FID_GET_TARGET_POSITION: return get_target_position(message, response);
-		case FID_SET_STEPS: return set_steps(message);
-		case FID_GET_STEPS: return get_steps(message, response);
-		case FID_GET_REMAINING_STEPS: return get_remaining_steps(message, response);
-		case FID_SET_STEP_CONFIGURATION: return set_step_configuration(message);
-		case FID_GET_STEP_CONFIGURATION: return get_step_configuration(message, response);
-		case FID_DRIVE_FORWARD: return drive_forward(message);
-		case FID_DRIVE_BACKWARD: return drive_backward(message);
-		case FID_STOP: return stop(message);
-		case FID_GET_INPUT_VOLTAGE: return get_input_voltage(message, response);
-		case FID_SET_MOTOR_CURRENT: return set_motor_current(message);
-		case FID_GET_MOTOR_CURRENT: return get_motor_current(message, response);
-		case FID_SET_ENABLED: return set_enabled(message);
-		case FID_GET_ENABLED: return get_enabled(message, response);
-		case FID_SET_BASIC_CONFIGURATION: return set_basic_configuration(message);
-		case FID_GET_BASIC_CONFIGURATION: return get_basic_configuration(message, response);
-		case FID_SET_SPREADCYCLE_CONFIGURATION: return set_spreadcycle_configuration(message);
-		case FID_GET_SPREADCYCLE_CONFIGURATION: return get_spreadcycle_configuration(message, response);
-		case FID_SET_STEALTH_CONFIGURATION: return set_stealth_configuration(message);
-		case FID_GET_STEALTH_CONFIGURATION: return get_stealth_configuration(message, response);
-		case FID_SET_COOLSTEP_CONFIGURATION: return set_coolstep_configuration(message);
-		case FID_GET_COOLSTEP_CONFIGURATION: return get_coolstep_configuration(message, response);
-		case FID_SET_MISC_CONFIGURATION: return set_misc_configuration(message);
-		case FID_GET_MISC_CONFIGURATION: return get_misc_configuration(message, response);
-		case FID_SET_ERROR_LED_CONFIG: return set_error_led_config(message);
-		case FID_GET_ERROR_LED_CONFIG: return get_error_led_config(message, response);
-		case FID_GET_DRIVER_STATUS: return get_driver_status(message, response);
-		case FID_SET_MINIMUM_VOLTAGE: return set_minimum_voltage(message);
-		case FID_GET_MINIMUM_VOLTAGE: return get_minimum_voltage(message, response);
-		case FID_SET_TIME_BASE: return set_time_base(message);
-		case FID_GET_TIME_BASE: return get_time_base(message, response);
-		case FID_GET_ALL_DATA: return get_all_data(message, response);
-		case FID_SET_GPIO_CONFIGURATION: return set_gpio_configuration(message);
-		case FID_GET_GPIO_CONFIGURATION: return get_gpio_configuration(message, response);
-		case FID_SET_GPIO_ACTION: return set_gpio_action(message);
-		case FID_GET_GPIO_ACTION: return get_gpio_action(message, response);
-		case FID_GET_GPIO_STATE: return get_gpio_state(message, response);
-		case FID_SET_ALL_CALLBACK_CONFIGURATION: return set_all_callback_configuration(message);
-		case FID_GET_ALL_DATA_CALLBACK_CONFIGURATON: return get_all_data_callback_configuraton(message, response);
+		case FID_SET_MAX_VELOCITY:                             return length != sizeof(SetMaxVelocity)                          ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_max_velocity(message);
+		case FID_GET_MAX_VELOCITY:                             return length != sizeof(GetMaxVelocity)                          ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_max_velocity(message, response);
+		case FID_GET_CURRENT_VELOCITY:                         return length != sizeof(GetCurrentVelocity)                      ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_current_velocity(message, response);
+		case FID_SET_SPEED_RAMPING:                            return length != sizeof(SetSpeedRamping)                         ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_speed_ramping(message);
+		case FID_GET_SPEED_RAMPING:                            return length != sizeof(GetSpeedRamping)                         ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_speed_ramping(message, response);
+		case FID_FULL_BRAKE:                                   return length != sizeof(FullBrake)                               ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : full_brake(message);
+		case FID_SET_CURRENT_POSITION:                         return length != sizeof(SetCurrentPosition)                      ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_current_position(message);
+		case FID_GET_CURRENT_POSITION:                         return length != sizeof(GetCurrentPosition)                      ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_current_position(message, response);
+		case FID_SET_TARGET_POSITION:                          return length != sizeof(SetTargetPosition)                       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_target_position(message);
+		case FID_GET_TARGET_POSITION:                          return length != sizeof(GetTargetPosition)                       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_target_position(message, response);
+		case FID_SET_STEPS:                                    return length != sizeof(SetSteps)                                ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_steps(message);
+		case FID_GET_STEPS:                                    return length != sizeof(GetSteps)                                ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_steps(message, response);
+		case FID_GET_REMAINING_STEPS:                          return length != sizeof(GetRemainingSteps)                       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_remaining_steps(message, response);
+		case FID_SET_STEP_CONFIGURATION:                       return length != sizeof(SetStepConfiguration)                    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_step_configuration(message);
+		case FID_GET_STEP_CONFIGURATION:                       return length != sizeof(GetStepConfiguration)                    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_step_configuration(message, response);
+		case FID_DRIVE_FORWARD:                                return length != sizeof(DriveForward)                            ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : drive_forward(message);
+		case FID_DRIVE_BACKWARD:                               return length != sizeof(DriveBackward)                           ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : drive_backward(message);
+		case FID_STOP:                                         return length != sizeof(Stop)                                    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : stop(message);
+		case FID_GET_INPUT_VOLTAGE:                            return length != sizeof(GetInputVoltage)                         ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_input_voltage(message, response);
+		case FID_SET_MOTOR_CURRENT:                            return length != sizeof(SetMotorCurrent)                         ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_motor_current(message);
+		case FID_GET_MOTOR_CURRENT:                            return length != sizeof(GetMotorCurrent)                         ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_motor_current(message, response);
+		case FID_SET_ENABLED:                                  return length != sizeof(SetEnabled)                              ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_enabled(message);
+		case FID_GET_ENABLED:                                  return length != sizeof(GetEnabled)                              ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_enabled(message, response);
+		case FID_SET_BASIC_CONFIGURATION:                      return length != sizeof(SetBasicConfiguration)                   ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_basic_configuration(message);
+		case FID_GET_BASIC_CONFIGURATION:                      return length != sizeof(GetBasicConfiguration)                   ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_basic_configuration(message, response);
+		case FID_SET_SPREADCYCLE_CONFIGURATION:                return length != sizeof(SetSpreadcycleConfiguration)             ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_spreadcycle_configuration(message);
+		case FID_GET_SPREADCYCLE_CONFIGURATION:                return length != sizeof(GetSpreadcycleConfiguration)             ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_spreadcycle_configuration(message, response);
+		case FID_SET_STEALTH_CONFIGURATION:                    return length != sizeof(SetStealthConfiguration)                 ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_stealth_configuration(message);
+		case FID_GET_STEALTH_CONFIGURATION:                    return length != sizeof(GetStealthConfiguration)                 ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_stealth_configuration(message, response);
+		case FID_SET_COOLSTEP_CONFIGURATION:                   return length != sizeof(SetCoolstepConfiguration)                ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_coolstep_configuration(message);
+		case FID_GET_COOLSTEP_CONFIGURATION:                   return length != sizeof(GetCoolstepConfiguration)                ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_coolstep_configuration(message, response);
+		case FID_SET_MISC_CONFIGURATION:                       return length != sizeof(SetMiscConfiguration)                    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_misc_configuration(message);
+		case FID_GET_MISC_CONFIGURATION:                       return length != sizeof(GetMiscConfiguration)                    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_misc_configuration(message, response);
+		case FID_SET_ERROR_LED_CONFIG:                         return length != sizeof(SetErrorLEDConfig)                       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_error_led_config(message);
+		case FID_GET_ERROR_LED_CONFIG:                         return length != sizeof(GetErrorLEDConfig)                       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_error_led_config(message, response);
+		case FID_GET_DRIVER_STATUS:                            return length != sizeof(GetDriverStatus)                         ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_driver_status(message, response);
+		case FID_SET_MINIMUM_VOLTAGE:                          return length != sizeof(SetMinimumVoltage)                       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_minimum_voltage(message);
+		case FID_GET_MINIMUM_VOLTAGE:                          return length != sizeof(GetMinimumVoltage)                       ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_minimum_voltage(message, response);
+		case FID_SET_TIME_BASE:                                return length != sizeof(SetTimeBase)                             ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_time_base(message);
+		case FID_GET_TIME_BASE:                                return length != sizeof(GetTimeBase)                             ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_time_base(message, response);
+		case FID_GET_ALL_DATA:                                 return length != sizeof(GetAllData)                              ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_all_data(message, response);
+		case FID_SET_ALL_CALLBACK_CONFIGURATION:               return length != sizeof(SetAllCallbackConfiguration)             ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_all_callback_configuration(message);
+		case FID_GET_ALL_DATA_CALLBACK_CONFIGURATON:           return length != sizeof(GetAllDataCallbackConfiguraton)          ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_all_data_callback_configuraton(message, response);
+		case FID_SET_GPIO_CONFIGURATION:                       return length != sizeof(SetGPIOConfiguration)                    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_gpio_configuration(message);
+		case FID_GET_GPIO_CONFIGURATION:                       return length != sizeof(GetGPIOConfiguration)                    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_gpio_configuration(message, response);
+		case FID_SET_GPIO_ACTION:                              return length != sizeof(SetGPIOAction)                           ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_gpio_action(message);
+		case FID_GET_GPIO_ACTION:                              return length != sizeof(GetGPIOAction)                           ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_gpio_action(message, response);
+		case FID_GET_GPIO_STATE:                               return length != sizeof(GetGPIOState)                            ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_gpio_state(message, response);
+		case FID_SET_MOTOR_STALLED_CALLBACK_CONFIGURATION:     return length != sizeof(SetMotorStalledCallbackConfiguration)    ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : set_motor_stalled_callback_configuration(message);
+		case FID_GET_MOTOR_STALLED_CALLBACK_CONFIGURATON:      return length != sizeof(GetMotorStalledCallbackConfiguraton)     ? HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER : get_motor_stalled_callback_configuraton(message, response);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
@@ -205,7 +208,7 @@ BootloaderHandleMessageResponse get_target_position(const GetTargetPosition *dat
 BootloaderHandleMessageResponse set_steps(const SetSteps *data) {
 	if(stepper_is_currently_running() || stepper.state == STEPPER_STATE_OFF) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
-	}	
+	}
 
 	stepper.state = STEPPER_STATE_STEPS;
 	stepper.steps = data->steps;
@@ -346,7 +349,7 @@ BootloaderHandleMessageResponse set_basic_configuration(const SetBasicConfigurat
 	tmc2130_reg_chopconf.bit.vhighchm     = data->high_velocity_chopper_mode;
 
 	tmc2130.register_to_write_mask |= (TMC2130_REG_IHOLD_IRUN_BIT | TMC2130_REG_TPOWERDOWN_BIT | TMC2130_REG_TPWMTHRS_BIT | TMC2130_REG_TCOOLTHRS_BIT | TMC2130_REG_THIGH_BIT | TMC2130_REG_CHOPCONF_BIT);
-	
+
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
@@ -658,6 +661,19 @@ BootloaderHandleMessageResponse get_gpio_state(const GetGPIOState *data, GetGPIO
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
+BootloaderHandleMessageResponse set_motor_stalled_callback_configuration(const SetMotorStalledCallbackConfiguration *data) {
+	stepper.motor_stalled_enabled = data->enabled;
+
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_motor_stalled_callback_configuraton(const GetMotorStalledCallbackConfiguraton *data, GetMotorStalledCallbackConfiguraton_Response *response) {
+	response->header.length = sizeof(GetMotorStalledCallbackConfiguraton_Response);
+	response->enabled       = stepper.motor_stalled_enabled;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
 
 
 bool handle_under_voltage_callback(void) {
@@ -802,6 +818,41 @@ bool handle_gpio_state_callback(void) {
 
 	return false;
 }
+
+bool handle_motor_stalled_callback(void) {
+	static bool is_buffered = false;
+	static MotorStalled_Callback cb;
+	static bool was_stalled = false;
+
+	if(was_stalled && !tmc2130_reg_drv_status.bit.stall_guard) {
+		was_stalled = false;
+	}
+
+	if(!is_buffered) {
+		if(!stepper.motor_stalled_enabled) {
+			return false;
+		}
+
+		if(!was_stalled && tmc2130_reg_drv_status.bit.stall_guard) {
+			was_stalled = true;
+			tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(MotorStalled_Callback), FID_CALLBACK_MOTOR_STALLED);
+			cb.position = stepper.position;
+		} else {
+			return false;
+		}
+	}
+
+	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(MotorStalled_Callback));
+		is_buffered = false;
+		return true;
+	} else {
+		is_buffered = true;
+	}
+
+	return false;
+}
+
 
 void communication_tick(void) {
 	communication_callback_tick();

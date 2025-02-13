@@ -1,5 +1,5 @@
 /* silent-stepper-v2-bricklet
- * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2025 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.h: TFP protocol message handling
  *
@@ -170,12 +170,15 @@ void communication_init(void);
 #define FID_SET_GPIO_ACTION 50
 #define FID_GET_GPIO_ACTION 51
 #define FID_GET_GPIO_STATE 52
+#define FID_SET_MOTOR_STALLED_CALLBACK_CONFIGURATION 56
+#define FID_GET_MOTOR_STALLED_CALLBACK_CONFIGURATON 57
 
 #define FID_CALLBACK_UNDER_VOLTAGE 41
 #define FID_CALLBACK_POSITION_REACHED 42
 #define FID_CALLBACK_ALL_DATA 53
 #define FID_CALLBACK_NEW_STATE 54
 #define FID_CALLBACK_GPIO_STATE 55
+#define FID_CALLBACK_MOTOR_STALLED 58
 
 typedef struct {
 	TFPMessageHeader header;
@@ -618,6 +621,25 @@ typedef struct {
 	uint8_t gpio_state[1];
 } __attribute__((__packed__)) GPIOState_Callback;
 
+typedef struct {
+	TFPMessageHeader header;
+	bool enabled;
+} __attribute__((__packed__)) SetMotorStalledCallbackConfiguration;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetMotorStalledCallbackConfiguraton;
+
+typedef struct {
+	TFPMessageHeader header;
+	bool enabled;
+} __attribute__((__packed__)) GetMotorStalledCallbackConfiguraton_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+	int32_t position;
+} __attribute__((__packed__)) MotorStalled_Callback;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_max_velocity(const SetMaxVelocity *data);
@@ -668,6 +690,8 @@ BootloaderHandleMessageResponse get_gpio_configuration(const GetGPIOConfiguratio
 BootloaderHandleMessageResponse set_gpio_action(const SetGPIOAction *data);
 BootloaderHandleMessageResponse get_gpio_action(const GetGPIOAction *data, GetGPIOAction_Response *response);
 BootloaderHandleMessageResponse get_gpio_state(const GetGPIOState *data, GetGPIOState_Response *response);
+BootloaderHandleMessageResponse set_motor_stalled_callback_configuration(const SetMotorStalledCallbackConfiguration *data);
+BootloaderHandleMessageResponse get_motor_stalled_callback_configuraton(const GetMotorStalledCallbackConfiguraton *data, GetMotorStalledCallbackConfiguraton_Response *response);
 
 // Callbacks
 bool handle_under_voltage_callback(void);
@@ -675,15 +699,17 @@ bool handle_position_reached_callback(void);
 bool handle_all_data_callback(void);
 bool handle_new_state_callback(void);
 bool handle_gpio_state_callback(void);
+bool handle_motor_stalled_callback(void);
 
 #define COMMUNICATION_CALLBACK_TICK_WAIT_MS 1
-#define COMMUNICATION_CALLBACK_HANDLER_NUM 5
+#define COMMUNICATION_CALLBACK_HANDLER_NUM 6
 #define COMMUNICATION_CALLBACK_LIST_INIT \
 	handle_under_voltage_callback, \
 	handle_position_reached_callback, \
 	handle_all_data_callback, \
 	handle_new_state_callback, \
 	handle_gpio_state_callback, \
+	handle_motor_stalled_callback, \
 
 
 #endif
